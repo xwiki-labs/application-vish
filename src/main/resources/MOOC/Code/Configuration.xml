@@ -96,15 +96,10 @@
     <guid>069f8b7a-6f48-4879-bfbe-80d3a6f50e6e</guid>
     <property>
       <allowedSpaces>
-        <value>Blog</value>
-        <value>MOOC</value>
-        <value>Templates.Article</value>
-        <value>Templates.Encyclopedia</value>
-        <value>WebIDECode</value>
       </allowedSpaces>
     </property>
     <property>
-      <vishServer>http://92.222.135.194:3000</vishServer>
+      <vishServer></vishServer>
     </property>
   </object>
   <object>
