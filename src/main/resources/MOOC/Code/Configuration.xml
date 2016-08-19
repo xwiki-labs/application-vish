@@ -99,7 +99,7 @@
       </allowedSpaces>
     </property>
     <property>
-      <vishServer></vishServer>
+      <vishServer/>
     </property>
   </object>
   <object>
