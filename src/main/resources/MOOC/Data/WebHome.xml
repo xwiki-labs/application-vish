@@ -32,8 +32,8 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1469613561000</creationDate>
-  <date>1469803409000</date>
-  <contentUpdateDate>1469803409000</contentUpdateDate>
+  <date>1471861090000</date>
+  <contentUpdateDate>1471861090000</contentUpdateDate>
   <version>1.1</version>
   <title>$services.localization.render('mooc.dataSpace.title')</title>
   <defaultTemplate/>
@@ -45,6 +45,7 @@
   <content>{{velocity}}
 #set ($columnsProperties = {
   'name': {"type":"text","size":10,"link":"view"},
+  'vishId': {"type":"text","size":5},
   'doc.date': {"type":"text","size":10},
   '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
 })
@@ -57,7 +58,7 @@
   'selectedColumn': 'name',
   'defaultOrder': 'asc'
 })
-#set ($columns = ['name', 'doc.date', '_actions'])
+#set ($columns = ['name', 'vishId', 'doc.date', '_actions'])
 #livetable('mooc' $columns $columnsProperties $options)
 {{/velocity}}</content>
 </xwikidoc>

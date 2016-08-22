@@ -32,8 +32,8 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1469613411000</creationDate>
-  <date>1469803503000</date>
-  <contentUpdateDate>1469803503000</contentUpdateDate>
+  <date>1471878777000</date>
+  <contentUpdateDate>1471878777000</contentUpdateDate>
   <version>1.1</version>
   <title/>
   <defaultTemplate/>
@@ -45,9 +45,8 @@
   <attachment>
     <filename>VISH.IframeAPI.js</filename>
     <filesize>17111</filesize>
-    <mimetype>application/javascript</mimetype>
     <author>xwiki:XWiki.Admin</author>
-    <date>1469626163000</date>
+    <date>1469694436000</date>
     <version>1.1</version>
     <comment/>
     <content>LyoNCiAqIFZJU0ggSWZyYW1lIE1lc3NlbmdlciBBUEkNCiAqIFByb3ZpZGVzIGFuIEFQSSB0aGF0
@@ -353,6 +352,278 @@ DQoNCgkJCS8vVXRpbHMNCgkJCWlzQ29ubmVjdGVkCQkJCQkJOiBpc0Nvbm5lY3RlZA0KCX07DQoN
 Cn0pIChWSVNIKTs=
 </content>
   </attachment>
+  <object>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <name>MOOC.Code.MOOCSheet</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>cf8ffc48-917f-402d-b9db-f0993937336f</guid>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>require(['jquery', 'xwiki-meta'], function($, xm) {
+  #set ($configRef = $services.model.createDocumentReference("", ["MOOC", "Code"], "Configuration"))
+  #set ($configDoc = $xwiki.getDocument($configRef))
+  #set ($config = $configDoc.getObject("MOOC.Code.ConfigurationClass"))
+  #set ($vishUrl = $config.getProperty('vishServer').value)
+  var displayError = function (err) {
+    console.log(err);
+    $('#vish_error').text(err);
+  };
+
+  // Get the domain from the server URL (remove http://)
+  var vishOrigin = "$vishUrl";
+  var vishDomainArr = vishOrigin.match(/https?:\/\/(.+)$/);
+
+  if (vishDomainArr.length &lt; 2) { displayError("Unable to extract the vish domain from the server URL : " + vishOrigin); return; }
+  var vishDomain = vishDomainArr[1];
+
+  var button = $('#vish_get_avatar');
+  var id = $(button).attr('data-id');
+
+  // Store the value
+  var storeAvatar = function(url) {
+    var avatarUrl = url.split('?')[0];
+    $.ajax({
+      url: xm.restURL+"/objects/MOOC.Code.MOOCClass/0/properties/avatar_url",
+      type: "PUT",
+      contentType: "text/plain",
+      data: avatarUrl
+    }).done(function (data) {
+      var img = '&lt;img src="' + avatarUrl + '" width="200" title="Excursion ' + id + '" alt="excursion_avatar" /&gt;';
+      $('#vish_avatar').html(img);
+      document.getElementById('MOOC.Code.MOOCClass_0_avatar_url').value = avatarUrl;
+    }).fail(function (xhr, err) {
+      displayError(err);
+    });
+  }
+
+  var onClick = function(e) {
+    e.preventDefault();
+    // The search API uses special id : "Excursion:{excursionID}@{domain}
+    var searchId = "Excursion:"+id+"@92.222.135.194:3000";
+    // Process the query
+    $.ajax({
+      url: vishOrigin+"/apis/search?id=Excursion:2@"+vishDomain,
+      type: "GET",
+      dataType: "json"
+    }).done(function (data){
+      if (data &amp;&amp; data.avatar_url) {
+        storeAvatar(data.avatar_url);
+        return;
+      }
+      displayError("Unable to find the avatar in VISH");
+    }).fail(function (xhr, err) {
+      displayError(err);
+    });
+  };
+
+  $(button).on('click', onClick);
+});</code>
+    </property>
+    <property>
+      <name>Get course avatar</name>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+  <object>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>6</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>3</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>1</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>2</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>5</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>4</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <name>MOOC.Code.MOOCSheet</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>8c271319-00cc-41f1-9715-4fcac5b69db3</guid>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>#vish_avatar {
+  display: inline-block;
+  margin-right: 100px;
+  vertical-align: top;
+}
+
+#vish_metadata {
+  display: inline-block;
+  vertical-align: top;
+}</code>
+    </property>
+    <property>
+      <contentType>CSS</contentType>
+    </property>
+    <property>
+      <name>MOOC CSS</name>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
   <content>{{velocity}}
 #set ($obj = $doc.getObject('MOOC.Code.MOOCClass'))
 #if ($doc.isNew())
@@ -370,25 +641,67 @@ Cn0pIChWSVNIKTs=
 #end
 ##
 #if ("$!vishUrl" != "")
-  ##
+##
   #set ($cId = $obj.getProperty("vishId").value)
-  ##
+  #set ($cAvatar = $obj.getProperty("avatar_url").value)
+##
   #if ("$!cId" == "")
-  {{html wiki="false"}}
-    &lt;form method="get" target="_blank" action="${vishUrl}excursions/new"&gt;
-    &lt;input type="submit" class="btn btn-success" value="Create New Course" /&gt;
-    &lt;/form&gt;
-  {{/html}}
+    ## Ask for the course id
+    {{html wiki="false"}}
+      &lt;form method="get" target="_blank" action="${vishUrl}excursions/new"&gt;
+      &lt;input type="submit" class="btn btn-success" value="Create New Course" /&gt;
+      &lt;/form&gt;
+    {{/html}}
+  #elseif($hasEdit || "$!cAvatar" != "")
+    #set ($discard = $xwiki.jsx.use("MOOC.Code.MOOCSheet"))
+    #set ($discard = $xwiki.ssx.use("MOOC.Code.MOOCSheet"))
+    ## Get the avatar
+    (% id="vish_avatar" %) (((
+    #if ("$!cAvatar" == "")
+      {{html wiki="false"}}
+        &lt;button id="vish_get_avatar" class="btn btn-primary" data-id="$cId"&gt;Get the avatar from VISH&lt;/button&gt;
+      {{/html}}
+    #else
+      [[image:$!cAvatar||width="200"]]
+    #end
+    )))
   #end
-  ##
-  * **Course Name** : $doc.display("name")
-  * **Vish Course ID** : $doc.display("vishId")
-
-
+## Display item data
+(% id="vish_metadata" %) (((
+**Course Name** : $doc.display("name")
+**Vish Course ID** : $doc.display("vishId")
+#if ($xcontext.action == "edit" &amp;&amp; "$!cId" != "")
+**Avatar URL** : $doc.display("avatar_url")
+#end
+)))
+##
   #if ("$!cId" == "")
     {{info}}Please edit the page to add the course ID from Vish if you want to find course information here{{/info}}
   #else
-    You can view the course here :
+    #set ($uploadRef = $services.model.createDocumentReference("", ["MOOC", "Excursions"], "$cId"))
+    #set ($uploadDoc = $xwiki.getDocument($uploadRef))
+    #if (!$uploadDoc.isNew())
+      #set ($attachList = $uploadDoc.getAttachmentList())
+      #if ($attachList.size() &gt; 0)
+        #set ($Integer = 0)
+        === Uploaded courses ===
+        #foreach ($attach in $attachList)
+          #set ($fileName = $attach.getFilename())
+          #set ($index = $fileName.lastIndexOf('.'))
+          #if ($index &gt; 0)
+            #set ($name = $fileName.substring(0,$index))
+            #set ($name = $numbertool.toNumber($name))
+            #set ($name = $datetool.format($name))
+          #end
+          #if ("$!name" == "")
+            #set ($name = $fileName)
+          #end
+          [[$name&gt;&gt;path:$uploadDoc.getAttachmentURL($fileName)]]
+        #end
+      #end
+    #end
+##
+    === View the course on VISH ===
     [[View course $cId&gt;&gt;url:${vishUrl}excursions/$cId||target="_blank"]]
   #end
 #else

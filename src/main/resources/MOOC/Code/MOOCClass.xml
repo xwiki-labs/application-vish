@@ -32,8 +32,8 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1469613409000</creationDate>
-  <date>1469785317000</date>
-  <contentUpdateDate>1469613409000</contentUpdateDate>
+  <date>1471879753000</date>
+  <contentUpdateDate>1469694436000</contentUpdateDate>
   <version>1.1</version>
   <title>MOOC Class</title>
   <defaultTemplate/>
@@ -51,6 +51,19 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
+    <avatar_url>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <name>avatar_url</name>
+      <number>3</number>
+      <picker>0</picker>
+      <prettyName>Avatar URL</prettyName>
+      <size>30</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+    </avatar_url>
     <name>
       <customDisplay/>
       <disabled>0</disabled>
